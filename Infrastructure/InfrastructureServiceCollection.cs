@@ -2,6 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.SqlClient;
 using Core.Abstractions;
+using Core.Abstractions.Helpers;
+using Common.Helpers;
+using Data.Repositories;
+using Core.Validators.PersonValidators;
 
 namespace Infrastructure
 {
@@ -23,7 +27,7 @@ namespace Infrastructure
             const string validator = "Validator";
 
             return services.Scan(selector => selector
-                .FromAssembliesOf(typeof(AddClientValidator))
+                .FromAssembliesOf(typeof(AddPersonValidator))
                 .AddClasses(typeFilter => typeFilter.Where(t => t.Name.EndsWith(validator)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
@@ -34,7 +38,7 @@ namespace Infrastructure
             const string repository = "Repository";
 
             return services.Scan(selector => selector
-                .FromAssembliesOf(typeof(ClientRepository))
+                .FromAssembliesOf(typeof(PersonRepository))
                 .AddClasses(typeFilter => typeFilter.Where(t => t.Name.EndsWith(repository)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
@@ -48,8 +52,7 @@ namespace Infrastructure
 
         public static IServiceCollection RegisterSendersAndHashers(this IServiceCollection services)
         {
-            return services.AddScoped<IEmailSender, EmailSender>()
-                .AddScoped<ITextHasher, TextHasher>();
+            return services.AddScoped<ITextHasher, TextHasher>();
         }
     }
 }
